@@ -1,14 +1,21 @@
-import {React, useEffect }from "react";
+import { React } from "react";
 import { Link } from "react-router-dom";
-import { useLocation } from 'react-router'
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  let location = useLocation()
+  let location = useLocation();
+  let navigate = useNavigate();
+  
+  const handleLogout = () =>{
+    localStorage.removeItem("token");
+    navigate("/login");
+  }
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
-          <Link className="navbar-brand" to="/">
+          <Link className="navbar-brand" to="/home">
             iNotebook
           </Link>
           <button
@@ -25,20 +32,49 @@ const Navbar = () => {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link className={`nav-link ${location.pathname === "/Home" ? "active" : " "}`} aria-current="page" to="/Home">
+                <Link
+                  className={`nav-link ${
+                    location.pathname === "/Home" ? "active" : " "
+                  }`}
+                  aria-current="page"
+                  to="/Home"
+                >
                   Home
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className={`nav-link ${location.pathname === "/About" ? "active" : " "}`} to="/About">
+                <Link
+                  className={`nav-link ${
+                    location.pathname === "/About" ? "active" : " "
+                  }`}
+                  to="/About"
+                >
                   About
                 </Link>
               </li>
             </ul>
-            <form className="d-flex">
-              <Link className="btn btn-primary mx-2" to="/login" role="button">Login</Link>
-              <Link className="btn btn-primary mx-2" to="/signup"role="button">SignUp</Link>
-            </form>
+            {!localStorage.getItem("token") ? (
+              <form className="d-flex">
+                <Link
+                  className="btn btn-primary mx-2"
+                  to="/login"
+                  role="button"
+                >
+                  Login
+                </Link>
+                <Link
+                  className="btn btn-primary mx-2"
+                  to="/signup"
+                  role="button"
+                >
+                  SignUp
+                </Link>
+              </form>
+            ) : (
+              <button className="btn btn-primary mx-2" onClick={handleLogout} role="button">
+                LogOut
+              </button>
+            )}
           </div>
         </div>
       </nav>
